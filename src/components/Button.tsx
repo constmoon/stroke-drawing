@@ -1,5 +1,5 @@
 import { forwardRef } from "react"
-import { classNames } from "../utils/string.helper"
+import { classNames } from "@/utils/string.helper"
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode
