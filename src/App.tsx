@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react"
+import Button from "./components/Button"
 
 interface PathData {
   path: string
@@ -79,11 +80,13 @@ export default function App() {
 
   return (
     <div className="App min-h-screen bg-gray-100 p-8">
-      <h2 className="text-lg text-gray-600 mb-6">
+      <h2 className="text-lg text-gray-600">
         Start editing to see some magic happen!
       </h2>
-      <button onClick={clearCanvas}>Reset</button>
-      <div className="flex gap-3 items-center justify-center mb-6">
+      <div className="mt-6 flex w-full gap-3 justify-center items-center">
+        <Button onClick={clearCanvas}>초기화</Button>
+      </div>
+      <div className="flex gap-3 items-center justify-center mt-6">
         <div className="bg-white rounded-xl shadow-lg p-3">
           <svg
             ref={canvasRef}
