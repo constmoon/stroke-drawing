@@ -1,5 +1,5 @@
 import { forwardRef } from "react"
-import { classNames } from "@/utils/string.helper"
+import { cn } from "@/utils/string.helper"
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode
@@ -7,7 +7,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, children, ...props }, ref) => {
-    const baseStyles = classNames(
+    const baseStyles = cn(
       "inline-flex items-center justify-center",
       "font-medium rounded-lg",
       "cursor-pointer",
@@ -17,11 +17,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     )
 
     return (
-      <button
-        ref={ref}
-        className={classNames(baseStyles, className)}
-        {...props}
-      >
+      <button ref={ref} className={cn(baseStyles, className)} {...props}>
         {children}
       </button>
     )
