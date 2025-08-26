@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react"
 import Button from "@/components/Button"
+import RangeInput from "@/components/RangeInput"
 
 interface PathData {
   path: string
@@ -10,7 +11,7 @@ interface PathData {
 }
 
 const DEFAULT_LINE_COLOR = "#000000"
-const DEFAULT_STROKE_COLOR = "#0000ff"
+const DEFAULT_STROKE_COLOR = "#ffff00"
 
 export default function App() {
   const canvasRef = useRef<SVGSVGElement>(null)
@@ -20,7 +21,7 @@ export default function App() {
   const [lineColor, setLineColor] = useState<string>(DEFAULT_LINE_COLOR)
   const [lineWidth, setLineWidth] = useState<number>(5)
   const [strokeColor, setStrokeColor] = useState<string>(DEFAULT_STROKE_COLOR)
-  const [strokeWidth, setStrokeWidth] = useState<number>(2)
+  const [strokeWidth, setStrokeWidth] = useState<number>(3)
 
   const getCanvasCoordinates = (
     e: React.MouseEvent<SVGSVGElement>,
@@ -83,8 +84,26 @@ export default function App() {
       <h2 className="text-lg text-gray-600">
         Start editing to see some magic happen!
       </h2>
-      <div className="mt-6 flex w-full gap-3 justify-center items-center">
-        <Button onClick={clearCanvas}>초기화</Button>
+      <div className="flex flex-wrap gap-6 mt-6 p-6 bg-white rounded-xl shadow-md">
+        <RangeInput
+          label="선 두께"
+          value={lineWidth}
+          onChange={(value) => setLineWidth(value)}
+          min={1}
+          max={30}
+          unit="px"
+        />
+        <RangeInput
+          label="테두리 두께"
+          value={strokeWidth}
+          onChange={(value) => setStrokeWidth(value)}
+          min={0}
+          max={10}
+          unit="px"
+        />
+        <div className="flex w-full gap-3 justify-center items-center">
+          <Button onClick={clearCanvas}>초기화</Button>
+        </div>
       </div>
       <div className="flex gap-3 items-center justify-center mt-6">
         <div className="bg-white rounded-xl shadow-lg p-3">
