@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import Button from "@/components/Button"
 import RangeInput from "@/components/RangeInput"
 import ColorInput from "./components/ColorInput"
@@ -23,6 +23,10 @@ export default function App() {
   const [lineWidth, setLineWidth] = useState<number>(5)
   const [strokeColor, setStrokeColor] = useState<string>(DEFAULT_STROKE_COLOR)
   const [strokeWidth, setStrokeWidth] = useState<number>(3)
+  const [removedItemList, setRemovedItemList] = useState<PathData[]>([])
+
+  const canUndo = pathList.length > 0
+  const canRedo = removedItemList.length > 0
 
   const getCanvasCoordinates = (
     e: React.MouseEvent<SVGSVGElement>,
@@ -70,6 +74,7 @@ export default function App() {
           strokeWidth,
         },
       ])
+      setRemovedItemList([])
       setCurrentPath("")
     }
     setIsDrawing(false)
@@ -78,13 +83,60 @@ export default function App() {
   const clearCanvas = (): void => {
     setPathList([])
     setCurrentPath("")
+    setRemovedItemList([])
   }
+
+  const undo = (): void => {
+    if (pathList.length === 0) {
+      return
+    }
+    
+    const removedItem = pathList[pathList.length - 1]
+    const newList = pathList.slice(0, -1)
+    
+    setPathList(newList)
+    setRemovedItemList((prev) => [removedItem, ...prev])
+    setCurrentPath("")
+  }
+
+  const redo = (): void => {
+    if (removedItemList.length === 0) {
+      return
+    }
+    
+    const itemToRestore = removedItemList[0]
+    const newRemoved = removedItemList.slice(1)
+    
+    setPathList((prev) => [...prev, itemToRestore])
+    setRemovedItemList(newRemoved)
+    setCurrentPath("")
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === "z") {
+          console.log('z')
+          e.preventDefault()
+          if (pathList.length > 0) {
+            console.log('undo')
+            undo()
+          }
+        } else if (e.key === "y" ) {
+          e.preventDefault()
+          if (removedItemList.length > 0) {
+            redo()
+          }
+        }
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [pathList.length, removedItemList.length])
 
   return (
     <div className="App min-h-screen bg-gray-100 p-8">
-      <h2 className="text-lg text-gray-600">
-        Start editing to see some magic happen!
-      </h2>
       <div className="flex flex-wrap gap-6 mt-6 mx-auto p-6 bg-white rounded-xl shadow-md max-w-[800px]">
         <ColorInput
           label="선 색상"
@@ -113,6 +165,20 @@ export default function App() {
           unit="px"
         />
         <div className="flex gap-3 justify-center items-center">
+          <Button
+            onClick={undo}
+            disabled={!canUndo}
+            className={!canUndo ? "opacity-50 cursor-not-allowed" : ""}
+          >
+            실행 취소
+          </Button>
+          <Button
+            onClick={redo}
+            disabled={!canRedo}
+            className={!canRedo ? "opacity-50 cursor-not-allowed" : ""}
+          >
+            다시 실행
+          </Button>
           <Button onClick={clearCanvas}>초기화</Button>
         </div>
       </div>
