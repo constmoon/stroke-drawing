@@ -90,10 +90,10 @@ export default function App() {
     if (pathList.length === 0) {
       return
     }
-    
+
     const removedItem = pathList[pathList.length - 1]
     const newList = pathList.slice(0, -1)
-    
+
     setPathList(newList)
     setRemovedItemList((prev) => [removedItem, ...prev])
     setCurrentPath("")
@@ -103,26 +103,45 @@ export default function App() {
     if (removedItemList.length === 0) {
       return
     }
-    
+
     const itemToRestore = removedItemList[0]
     const newRemoved = removedItemList.slice(1)
-    
+
     setPathList((prev) => [...prev, itemToRestore])
     setRemovedItemList(newRemoved)
     setCurrentPath("")
+  }
+
+  const exportSVG = (): void => {
+    const svgElement = canvasRef.current
+    if (!svgElement) {
+      return
+    }
+
+    const serializer = new XMLSerializer()
+    const svgString = serializer.serializeToString(svgElement)
+
+    const blob = new Blob([svgString], { type: "image/svg+xml" })
+    const url = URL.createObjectURL(blob)
+
+    const a = document.createElement("a")
+    a.href = url
+    a.download = "drawing.svg"
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
   }
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.metaKey) {
         if (e.key === "z") {
-          console.log('z')
           e.preventDefault()
           if (pathList.length > 0) {
-            console.log('undo')
             undo()
           }
-        } else if (e.key === "y" ) {
+        } else if (e.key === "y") {
           e.preventDefault()
           if (removedItemList.length > 0) {
             redo()
@@ -164,7 +183,7 @@ export default function App() {
           max={10}
           unit="px"
         />
-        <div className="flex gap-3 justify-center items-center">
+        <div className="flex gap-3 ml-auto justify-center items-center">
           <Button
             onClick={undo}
             disabled={!canUndo}
@@ -180,6 +199,7 @@ export default function App() {
             다시 실행
           </Button>
           <Button onClick={clearCanvas}>초기화</Button>
+          <Button onClick={exportSVG}>저장</Button>
         </div>
       </div>
       <div className="flex gap-3 items-center justify-center mt-6">
