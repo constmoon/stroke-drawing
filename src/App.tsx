@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react"
 import Button from "@/components/Button"
 import RangeInput from "@/components/RangeInput"
+import ColorInput from "./components/ColorInput"
 
 interface PathData {
   path: string
@@ -84,7 +85,17 @@ export default function App() {
       <h2 className="text-lg text-gray-600">
         Start editing to see some magic happen!
       </h2>
-      <div className="flex flex-wrap gap-6 mt-6 p-6 bg-white rounded-xl shadow-md">
+      <div className="flex flex-wrap gap-6 mt-6 mx-auto p-6 bg-white rounded-xl shadow-md max-w-[800px]">
+        <ColorInput
+          label="선 색상"
+          value={lineColor}
+          onChange={(value) => setLineColor(value)}
+        />
+        <ColorInput
+          label="테두리 색상"
+          value={strokeColor}
+          onChange={(value) => setStrokeColor(value)}
+        />
         <RangeInput
           label="선 두께"
           value={lineWidth}
@@ -101,12 +112,12 @@ export default function App() {
           max={10}
           unit="px"
         />
-        <div className="flex w-full gap-3 justify-center items-center">
+        <div className="flex gap-3 justify-center items-center">
           <Button onClick={clearCanvas}>초기화</Button>
         </div>
       </div>
       <div className="flex gap-3 items-center justify-center mt-6">
-        <div className="bg-white rounded-xl shadow-lg p-3">
+        <div className="bg-white rounded-xl shadow-lg">
           <svg
             ref={canvasRef}
             width="800"
