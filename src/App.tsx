@@ -216,15 +216,6 @@ export default function App() {
           >
             {pathList.map((pathData, index) => (
               <>
-                <path
-                  key={`path-${index}`}
-                  d={pathData.path}
-                  fill="none"
-                  stroke={pathData.lineColor}
-                  strokeWidth={pathData.lineWidth}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
                 {pathData.strokeWidth > 0 && (
                   <path
                     key={`stroke-${index}`}
@@ -234,9 +225,17 @@ export default function App() {
                     strokeWidth={pathData.lineWidth + pathData.strokeWidth * 2}
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    style={{ mixBlendMode: "multiply" }}
                   />
                 )}
+                <path
+                  key={`path-${index}`}
+                  d={pathData.path}
+                  fill="none"
+                  stroke={pathData.lineColor}
+                  strokeWidth={pathData.lineWidth}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </>
             ))}
             {currentPath && (
@@ -249,7 +248,6 @@ export default function App() {
                     strokeWidth={lineWidth + strokeWidth * 2}
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    style={{ mixBlendMode: "multiply" }}
                   />
                 )}
                 <path
